@@ -1,302 +1,402 @@
 
 import streamlit as st
+from pathlib import Path
 
+# ---------------- PAGE SETTINGS ----------------
 st.set_page_config(
-    page_title="UniPlace | ADYPU",
+    page_title="UniPlace | ADYPU Placement Portal",
     page_icon="🎓",
     layout="wide"
 )
 
+# ---------------- COLORS & CSS ----------------
 st.markdown("""
 <style>
-.stApp {
-    background: #ffffff;
-    color: #252033;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Poppins', sans-serif;
 }
 
-[data-testid="stHeader"] {
-    background: white;
+.stApp {
+    background: #f7f9fc;
 }
 
 .block-container {
-    padding-top: 1.5rem;
-    padding-bottom: 1rem;
-    max-width: 1400px;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    max-width: 1250px;
+}
+
+header[data-testid="stHeader"] {
+    background: transparent;
+}
+
+#MainMenu, footer {
+    visibility: hidden;
 }
 
 .brand {
-    color: #a50021;
-    font-size: 25px;
+    color: #102b50;
+    font-size: 27px;
     font-weight: 800;
-    line-height: 1.2;
+    letter-spacing: -1px;
 }
 
-.brand small {
-    color: #444;
-    font-size: 11px;
-    letter-spacing: 2px;
+.brand span {
+    color: #d62839;
+}
+
+.university {
+    color: #52647b;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+}
+
+.topline {
+    background: #102b50;
+    color: white;
+    padding: 9px 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 12px;
 }
 
 .hero {
-    background: linear-gradient(110deg, #97001e, #c9002b);
-    border-radius: 14px;
-    padding: 55px 35px;
+    background: linear-gradient(90deg, rgba(8,31,59,.94), rgba(8,31,59,.45)),
+    url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600');
+    background-size: cover;
+    background-position: center;
+    padding: 75px 55px;
+    border-radius: 12px;
     color: white;
-    min-height: 300px;
+    margin-top: 20px;
+    min-height: 350px;
 }
 
 .hero h1 {
-    color: white;
     font-size: 43px;
-    line-height: 1.15;
+    line-height: 1.25;
+    font-weight: 800;
+    color: white;
 }
 
 .hero p {
-    color: #fff0f2;
-    font-size: 17px;
-}
-
-.hero-button {
-    display: inline-block;
-    background: white;
-    color: #a50021 !important;
-    padding: 12px 22px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
+    font-size: 16px;
+    color: #edf3fa;
+    max-width: 600px;
 }
 
 .section-title {
-    color: #8f001e;
+    color: #102b50;
     font-size: 27px;
-    font-weight: 750;
+    font-weight: 800;
+    margin-top: 35px;
 }
 
-.stat-card {
-    background: #fff7f8;
-    border: 1px solid #f1d9df;
-    border-radius: 12px;
-    padding: 20px 8px;
-    text-align: center;
-}
-
-.stat-number {
-    color: #a50021;
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.stat-label {
-    color: #4b4550;
+.section-sub {
+    color: #68778a;
     font-size: 14px;
 }
 
+.stat-card {
+    background: white;
+    padding: 22px 12px;
+    border-radius: 10px;
+    text-align: center;
+    border-bottom: 4px solid #d62839;
+    box-shadow: 0 3px 15px rgba(0,0,0,.05);
+}
+
+.stat-number {
+    color: #102b50;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.stat-label {
+    color: #68778a;
+    font-size: 12px;
+}
+
 .feature-card {
-    background: #fffafa;
-    border: 1px solid #f0dce1;
-    border-radius: 13px;
-    padding: 22px;
-    min-height: 150px;
+    background: white;
+    padding: 24px;
+    border-radius: 10px;
+    min-height: 175px;
+    border: 1px solid #e7ebf1;
+    box-shadow: 0 3px 12px rgba(0,0,0,.04);
 }
 
 .feature-card h3 {
-    color: #97001e;
+    color: #102b50;
+    font-size: 18px;
 }
 
-.recruiter {
+.feature-card p {
+    color: #68778a;
+    font-size: 13px;
+}
+
+.company {
     background: white;
-    border: 1px solid #eadde0;
-    border-radius: 10px;
-    padding: 16px 8px;
+    border: 1px solid #e7ebf1;
+    padding: 20px 8px;
+    border-radius: 8px;
     text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
+    color: #102b50;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.about-box {
+    background: #102b50;
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.about-box h2 {
+    color: white;
+}
+
+.about-box p {
+    color: #e0e8f2;
+    font-size: 14px;
 }
 
 .footer {
-    background: #90001d;
+    background: #0b203b;
     color: white;
-    text-align: center;
-    padding: 22px;
+    padding: 30px;
     border-radius: 10px;
+    margin-top: 40px;
+    text-align: center;
 }
+
+.footer p {
+    color: #c5d0df;
+    font-size: 12px;
+}
+
+div.stButton > button {
+    background: #d62839;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-weight: 600;
+}
+
+div.stButton > button:hover {
+    background: #a91d2c;
+    color: white;
+    border: none;
+}
+
+[data-testid="stRadio"] > div {
+    gap: 12px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-# UNIVERSITY HEADER
-left, right = st.columns([1.5, 2])
+# ---------------- HEADER ----------------
+logo_path = Path("assets/adypu_logo.png")
+
+left, middle, right = st.columns([1, 3, 2])
 
 with left:
+    if logo_path.exists():
+        st.image(str(logo_path), width=85)
+    else:
+        st.markdown("## ADYPU")
+
+with middle:
     st.markdown("""
-    <div class="brand">
-        🎓 AJEENKYA<br>
-        D Y PATIL UNIVERSITY
-        <small><br>THE INNOVATION UNIVERSITY</small>
-    </div>
+    <div class="brand">Uni<span>Place</span></div>
+    <div class="university">PLACEMENT & CAREER PORTAL</div>
     """, unsafe_allow_html=True)
 
 with right:
     st.markdown("""
-    <h3 style="color:#a50021; text-align:right;
-    padding-top:15px;">
-    PLACEMENT PORTAL
-    </h3>
+    <div style="text-align:right;color:#102b50;font-size:12px;
+    font-weight:600;padding-top:15px;">
+    AJEENKYA D Y PATIL UNIVERSITY<br>
+    <span style="color:#d62839;">THE INNOVATION UNIVERSITY</span>
+    </div>
     """, unsafe_allow_html=True)
 
 st.divider()
 
-# NAVIGATION
-n1, n2, n3, n4, n5, n6 = st.columns(6)
+# ---------------- NAVIGATION ----------------
+selected = st.radio(
+    "Navigation",
+    ["Home", "Jobs", "Companies", "About Us", "Contact", "Student Login"],
+    horizontal=True,
+    label_visibility="collapsed"
+)
 
-with n1:
-    st.button("🏠 Home", use_container_width=True)
+st.markdown("""
+<div class="topline">
+    Welcome to UniPlace — Connecting Talent with Opportunity
+</div>
+""", unsafe_allow_html=True)
 
-with n2:
-    st.button("💼 Jobs", use_container_width=True)
+# ---------------- HOME PAGE ----------------
+if selected == "Home":
 
-with n3:
-    st.button("🏢 Companies", use_container_width=True)
-
-with n4:
-    st.button("ℹ️ About Us", use_container_width=True)
-
-with n5:
-    st.button("✉️ Contact", use_container_width=True)
-
-with n6:
-    st.button("🔐 Student Login", use_container_width=True)
-
-st.write("")
-
-# HERO SECTION
-hero_left, hero_right = st.columns([1.15, 1])
-
-with hero_left:
     st.markdown("""
     <div class="hero">
-        <h1>Building Careers,<br>Shaping Futures</h1>
-        <p>Your Placement Journey Begins Here at
-        <b>Ajeenkya D Y Patil University</b></p>
-        <a class="hero-button" href="#opportunities">
-        Explore Opportunities →</a>
+        <h1>BUILD YOUR FUTURE.<br>
+        FIND YOUR OPPORTUNITY.</h1>
+        <p>
+        Explore career opportunities, connect with leading employers
+        and take the next step towards your professional journey.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-with hero_right:
-    st.image(
-        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1",
-        use_container_width=True
-    )
+    st.write("")
 
-st.write("")
+    st.markdown("""
+    <div class="section-title">Placement Highlights</div>
+    <div class="section-sub">ADYPU Placement Excellence 2025 — figures published on the university website.</div>
+    """, unsafe_allow_html=True)
 
-# PLACEMENT STATISTICS
-st.markdown(
-    '<p class="section-title">Placement Overview</p>',
-    unsafe_allow_html=True
-)
+    c1, c2, c3, c4 = st.columns(4)
 
-s1, s2, s3, s4 = st.columns(4)
+    stats = [
+        ("1100+", "Total Job Offers"),
+        ("500+", "Internships"),
+        ("55 LPA", "Highest Package"),
+        ("13–14 LPA", "Average Package of Top Offers")
+    ]
 
-stats = [
-    (s1, "500+", "Students Placed"),
-    (s2, "350+", "Recruiting Companies"),
-    (s3, "1200+", "Job Opportunities"),
-    (s4, "95%", "Placement Success")
-]
+    for col, (number, label) in zip([c1, c2, c3, c4], stats):
+        with col:
+            st.markdown(f"""
+            <div class="stat-card">
+                <div class="stat-number">{number}</div>
+                <div class="stat-label">{label}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-for col, number, label in stats:
-    with col:
-        st.markdown(f"""
-        <div class="stat-card">
-            <div class="stat-number">{number}</div>
-            <div class="stat-label">{label}</div>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="section-title">Our Recruiter Network</div>
+    <div class="section-sub">
+    Organisations listed on ADYPU's official placements page.
+    </div>
+    """, unsafe_allow_html=True)
 
-st.write("")
+    companies = [
+        "Tech Mahindra", "Deloitte", "HSBC", "Tata Technologies",
+        "Cohesity", "Entrata", "TVS Lucas", "Syneos Health"
+    ]
 
-# TOP RECRUITERS
-st.markdown(
-    '<p class="section-title">Our Top Recruiters</p>',
-    unsafe_allow_html=True
-)
+    cols = st.columns(4)
+    for i, company in enumerate(companies):
+        with cols[i % 4]:
+            st.markdown(
+                f'<div class="company">{company}</div>',
+                unsafe_allow_html=True
+            )
+            st.write("")
 
-recruiters = st.columns(7)
+    st.markdown("""
+    <div class="section-title">Explore UniPlace</div>
+    <div class="section-sub">
+    Everything you need to prepare for your career journey.
+    </div>
+    """, unsafe_allow_html=True)
 
-companies = [
-    "TCS", "Infosys", "Accenture", "Wipro",
-    "Deloitte", "Capgemini", "Amazon"
-]
+    f1, f2, f3 = st.columns(3)
 
-for col, company in zip(recruiters, companies):
-    with col:
-        st.markdown(
-            f'<div class="recruiter">{company}</div>',
-            unsafe_allow_html=True
-        )
+    features = [
+        ("💼", "Career Opportunities",
+         "Discover job openings, internships and career opportunities."),
+        ("🎯", "Skill Development",
+         "Prepare for interviews and improve your professional skills."),
+        ("🤝", "Industry Connect",
+         "Explore organisations and connect with the world of work.")
+    ]
 
-st.write("")
+    for col, (emoji, heading, description) in zip([f1, f2, f3], features):
+        with col:
+            st.markdown(f"""
+            <div class="feature-card">
+                <div style="font-size:32px">{emoji}</div>
+                <h3>{heading}</h3>
+                <p>{description}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-# FEATURES AND ABOUT SECTION
-st.markdown(
-    '<p class="section-title">Explore UniPlace</p>',
-    unsafe_allow_html=True
-)
+    st.write("")
+    st.markdown("""
+    <div class="about-box">
+        <h2>About Placements at ADYPU</h2>
+        <p>
+        The Student Progression & Corporate Relations Office supports
+        students through career guidance, industry interaction,
+        employability training and placement opportunities.
+        </p>
+        <p>
+        UniPlace brings career-related information together in one
+        convenient portal.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-f1, f2, f3 = st.columns(3)
+    st.markdown("""
+    <div class="footer">
+        <h2>UniPlace</h2>
+        <p>Ajeenkya D Y Patil University | Pune, Maharashtra</p>
+        <p>Placement & Career Portal</p>
+        <p>© 2026 UniPlace. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-features = [
-    (f1, "💼 Career Opportunities",
-     "Explore job and internship opportunities."),
-    (f2, "📈 Skill Development",
-     "Improve your skills with industry-ready training."),
-    (f3, "🤝 Industry Connect",
-     "Build connections with leading recruiters.")
-]
+# ---------------- JOBS PAGE ----------------
+elif selected == "Jobs":
+    st.title("Career Opportunities")
+    st.write("Explore job and internship opportunities.")
+    st.info("Job listings will be added in the next development step.")
 
-for col, title, description in features:
-    with col:
-        st.markdown(f"""
-        <div class="feature-card">
-            <h3>{title}</h3>
-            <p>{description}</p>
-        </div>
-        """, unsafe_allow_html=True)
+# ---------------- COMPANIES PAGE ----------------
+elif selected == "Companies":
+    st.title("Recruiter Network")
+    st.write("Explore organisations featured on the university placement page.")
+    for company in companies:
+        st.write("•", company)
 
-st.write("")
-
-about_left, about_right = st.columns([1.3, 1])
-
-with about_left:
-    st.markdown(
-        '<p class="section-title">About Placements</p>',
-        unsafe_allow_html=True
-    )
+# ---------------- ABOUT PAGE ----------------
+elif selected == "About Us":
+    st.title("About UniPlace")
     st.write("""
-    At UniPlace, we aim to connect students with
-    career opportunities and industry professionals.
+    UniPlace is a placement and career portal concept for bringing
+    students and career opportunities together.
 
-    Our placement portal helps students explore jobs,
-    prepare for interviews and manage applications
-    throughout their career journey.
+    It is designed around the placement journey, career preparation
+    and industry connections at ADYPU.
     """)
+    st.markdown("[Visit ADYPU Official Website](https://adypu.edu.in/)")
 
-with about_right:
-    st.image(
-        "https://images.unsplash.com/photo-1523580494863-6f3031224c94",
-        use_container_width=True
-    )
+# ---------------- CONTACT PAGE ----------------
+elif selected == "Contact":
+    st.title("Contact Us")
+    st.write("Ajeenkya D Y Patil University")
+    st.write("D Y Patil Knowledge City, Charholi Bk., Pune – 411081")
+    st.markdown("[University Website](https://adypu.edu.in/)")
 
-st.write("")
+# ---------------- STUDENT LOGIN PAGE ----------------
+elif selected == "Student Login":
+    st.title("Student Login")
+    st.write("Access your placement portal.")
 
-# FOOTER
-st.markdown("""
-<div class="footer">
-    <h3>🎓 UniPlace</h3>
-    Connecting Students With Career Opportunities
-    <br><br>
-    © 2026 UniPlace | Placement Portal
-</div>
-""", unsafe_allow_html=True)
+    email = st.text_input("Student Email")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        st.warning("Student authentication will be connected in the next step.")
+
