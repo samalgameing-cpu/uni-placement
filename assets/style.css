@@ -1,0 +1,21 @@
+.stApp {
+    background-color: #F5F7FC;
+}
+
+h1, h2, h3 {
+    color: #172554;
+    font-family: Arial;
+}
+
+p {
+    color: #475569;
+}
+
+.stButton > button {
+    background-color: #5B21B6;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 22px;
+    font-weight: bold;
+}
