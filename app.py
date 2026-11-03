@@ -3,15 +3,23 @@ import streamlit as st
 from pathlib import Path
 
 st.set_page_config(
-    page_title="UniPlace | ADYPU",
+    page_title="UniPlace | ADYPU Placement Portal",
     page_icon="🎓",
     layout="wide"
 )
 
-# ---------------- PATHS ----------------
 ASSETS = Path("assets")
-UNIVERSITY_LOGO = ASSETS / "adypu_logo.png"
-TCS_LOGO = ASSETS / "tcs.png"
+
+# Safely display image files
+def show_image(path, width):
+    try:
+        if path.exists() and path.stat().st_size > 0:
+            st.image(str(path), width=width)
+            return True
+    except Exception:
+        pass
+    return False
+
 
 # ---------------- CSS ----------------
 st.markdown("""
@@ -22,178 +30,187 @@ html, body, [class*="css"] {
     font-family: 'Poppins', sans-serif;
 }
 
-.stApp { background: #f6f8fc; }
+.stApp {
+    background: #f6f8fc;
+}
 
 .block-container {
     max-width: 1250px;
     padding-top: 1rem;
 }
 
-#MainMenu, footer {visibility:hidden;}
+#MainMenu, footer {
+    visibility: hidden;
+}
 
 .brand {
-    color:#102b50;
-    font-size:29px;
-    font-weight:800;
+    font-size: 30px;
+    font-weight: 800;
+    color: #102b50;
 }
-.brand span {color:#d62839;}
+
+.brand span {
+    color: #d62839;
+}
 
 .university {
-    color:#52647b;
-    font-size:10px;
-    letter-spacing:1px;
-    font-weight:600;
+    color: #52647b;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .topline {
-    background:#102b50;
-    color:white;
-    padding:10px;
-    text-align:center;
-    border-radius:5px;
-    font-size:12px;
+    background: #102b50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
 }
 
 .hero {
-    background:linear-gradient(90deg,rgba(8,31,59,.95),rgba(8,31,59,.4)),
+    background:
+    linear-gradient(90deg, rgba(8,31,59,.95), rgba(8,31,59,.40)),
     url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600');
-    background-position:center;
-    background-size:cover;
-    padding:75px 45px;
-    border-radius:12px;
-    color:white;
-    margin-top:20px;
-    min-height:330px;
+    background-size: cover;
+    background-position: center;
+    padding: 75px 45px;
+    border-radius: 12px;
+    margin-top: 20px;
+    min-height: 330px;
 }
 
 .hero h1 {
-    color:white;
-    font-size:42px;
-    font-weight:800;
+    color: white;
+    font-size: 42px;
+    font-weight: 800;
 }
 
 .hero p {
-    color:#edf3fa;
-    font-size:15px;
-    max-width:600px;
+    color: #edf3fa;
+    font-size: 15px;
+    max-width: 600px;
 }
 
 .section-title {
-    color:#102b50;
-    font-size:27px;
-    font-weight:800;
-    margin-top:35px;
+    color: #102b50;
+    font-size: 27px;
+    font-weight: 800;
+    margin-top: 35px;
 }
 
 .section-sub {
-    color:#68778a;
-    font-size:13px;
+    color: #68778a;
+    font-size: 13px;
 }
 
 .stat-card {
-    background:white;
-    padding:22px 10px;
-    border-radius:10px;
-    text-align:center;
-    border-bottom:4px solid #d62839;
-    box-shadow:0 3px 15px rgba(0,0,0,.05);
+    background: white;
+    padding: 22px 10px;
+    border-radius: 10px;
+    text-align: center;
+    border-bottom: 4px solid #d62839;
+    box-shadow: 0 3px 15px rgba(0,0,0,.05);
 }
 
 .stat-number {
-    color:#102b50;
-    font-size:29px;
-    font-weight:800;
+    color: #102b50;
+    font-size: 29px;
+    font-weight: 800;
 }
 
 .stat-label {
-    color:#68778a;
-    font-size:12px;
+    color: #68778a;
+    font-size: 12px;
 }
 
 .company-card {
-    background:white;
-    border:1px solid #e7ebf1;
-    border-radius:9px;
-    padding:20px 10px;
-    min-height:100px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
+    background: white;
+    border: 1px solid #e7ebf1;
+    border-radius: 9px;
+    padding: 20px 10px;
+    min-height: 100px;
+    text-align: center;
 }
 
 .company-name {
-    color:#102b50;
-    font-size:16px;
-    font-weight:800;
+    color: #102b50;
+    font-size: 17px;
+    font-weight: 800;
+    padding-top: 15px;
 }
 
 .feature-card {
-    background:white;
-    padding:24px;
-    border-radius:10px;
-    min-height:170px;
-    border:1px solid #e7ebf1;
-    box-shadow:0 3px 12px rgba(0,0,0,.04);
+    background: white;
+    padding: 24px;
+    border-radius: 10px;
+    min-height: 170px;
+    border: 1px solid #e7ebf1;
+    box-shadow: 0 3px 12px rgba(0,0,0,.04);
 }
 
 .feature-card h3 {
-    color:#102b50;
-    font-size:18px;
+    color: #102b50;
+    font-size: 18px;
 }
 
 .feature-card p {
-    color:#68778a;
-    font-size:13px;
+    color: #68778a;
+    font-size: 13px;
 }
 
 .about-box {
-    background:#102b50;
-    color:white;
-    padding:30px;
-    border-radius:12px;
+    background: #102b50;
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
 }
 
-.about-box h2 {color:white;}
-.about-box p {color:#e0e8f2;font-size:14px;}
+.about-box h2 {
+    color: white;
+}
+
+.about-box p {
+    color: #e0e8f2;
+    font-size: 14px;
+}
 
 .footer {
-    background:#0b203b;
-    color:white;
-    padding:30px;
-    border-radius:10px;
-    margin-top:40px;
-    text-align:center;
+    background: #0b203b;
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 40px;
+    text-align: center;
 }
 
 .footer p {
-    color:#c5d0df;
-    font-size:12px;
+    color: #c5d0df;
+    font-size: 12px;
 }
 
 div.stButton > button {
-    background:#d62839;
-    color:white;
-    border:none;
-    border-radius:6px;
-    font-weight:600;
+    background: #d62839;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
 }
 
 div.stButton > button:hover {
-    background:#a91d2c;
-    color:white;
+    background: #a91d2c;
+    color: white;
 }
-
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---------------- HEADER ----------------
 left, middle, right = st.columns([1, 3, 2])
 
 with left:
-    if UNIVERSITY_LOGO.exists():
-        st.image(str(UNIVERSITY_LOGO), width=85)
-    else:
+    if not show_image(ASSETS / "adypu_logo.png", 85):
         st.markdown("## ADYPU")
 
 with middle:
@@ -213,6 +230,7 @@ with right:
 
 st.divider()
 
+
 # ---------------- NAVIGATION ----------------
 selected = st.radio(
     "Navigation",
@@ -227,13 +245,21 @@ Welcome to UniPlace — Connecting Talent with Opportunity
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- RECRUITER DATA ----------------
+
+# ---------------- COMPANY LIST ----------------
 companies = [
-    "TCS", "Deloitte", "HSBC", "Tata Technologies",
-    "Cohesity", "Entrata", "TVS Lucas", "Syneos Health"
+    "TCS",
+    "Deloitte",
+    "HSBC",
+    "Tata Technologies",
+    "Cohesity",
+    "Entrata",
+    "TVS Lucas",
+    "Syneos Health"
 ]
 
-# ---------------- HOME ----------------
+
+# ---------------- HOME PAGE ----------------
 if selected == "Home":
 
     st.markdown("""
@@ -261,6 +287,7 @@ if selected == "Home":
     ]
 
     cols = st.columns(4)
+
     for col, (number, label) in zip(cols, stats):
         with col:
             st.markdown(f"""
@@ -283,8 +310,12 @@ if selected == "Home":
         with cols[i % 4]:
             st.markdown('<div class="company-card">', unsafe_allow_html=True)
 
-            if company == "TCS" and TCS_LOGO.exists():
-                st.image(str(TCS_LOGO), width=130)
+            if company == "TCS":
+                if not show_image(ASSETS / "tcs.png", 130):
+                    st.markdown(
+                        '<div class="company-name">TCS</div>',
+                        unsafe_allow_html=True
+                    )
             else:
                 st.markdown(
                     f'<div class="company-name">{company}</div>',
@@ -348,17 +379,21 @@ if selected == "Home":
     </div>
     """, unsafe_allow_html=True)
 
+
 # ---------------- JOBS ----------------
 elif selected == "Jobs":
     st.title("Career Opportunities")
     st.write("Explore job and internship opportunities.")
     st.info("Job listings will be added in the next development step.")
 
+
 # ---------------- COMPANIES ----------------
 elif selected == "Companies":
     st.title("Our Recruiter Network")
+
     for company in companies:
         st.write("•", company)
+
 
 # ---------------- ABOUT ----------------
 elif selected == "About Us":
@@ -369,6 +404,7 @@ elif selected == "About Us":
     """)
     st.markdown("[ADYPU Official Website](https://adypu.edu.in/)")
 
+
 # ---------------- CONTACT ----------------
 elif selected == "Contact":
     st.title("Contact Us")
@@ -376,9 +412,11 @@ elif selected == "Contact":
     st.write("D Y Patil Knowledge City, Charholi Bk., Pune – 411081")
     st.markdown("[University Website](https://adypu.edu.in/)")
 
+
 # ---------------- STUDENT LOGIN ----------------
 elif selected == "Student Login":
     st.title("Student Login")
+
     email = st.text_input("Student Email")
     password = st.text_input("Password", type="password")
 
